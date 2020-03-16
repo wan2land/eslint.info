@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ESLint info</title>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <th>rule</th>
+        <% for (const config of configs) { %>
+          <th><%= config.name %></th>
+        <% } %>
+      </thead>
+      <tbody>
+        <% for (const rule of rules) { %>
+          <tr>
+            <th>
+              <div class="flex justify-between">
+                <span><%= rule.name %></span>
+                <% if (rule.description) { %>
+                  <span title="<%= rule.description %>">?</span>
+                <% } %>
+              </div>
+            </th>
+            <% for (const config of configs) { %>
+              <td><%= config.config.rules[rule.name] %></td>
+            <% } %>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <script src="entry.js"></script>
+  </body>
+</html>
