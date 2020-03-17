@@ -6,27 +6,53 @@
   </head>
   <body>
     <table>
+      <colgroup>
+        <col width="300px" />
+        <col width="50px" />
+        <col width="50px" />
+        <% for (const config of configs) { %>
+          <col width="100px" />
+        <% } %>
+      </colgroup>
       <thead>
-        <th>rule</th>
+        <th colspan="3"></th>
         <% for (const config of configs) { %>
           <th><%= config.name %></th>
         <% } %>
       </thead>
       <tbody>
-        <% for (const rule of rules) { %>
+        <% for (const category of categories) { %>
           <tr>
-            <th>
-              <div class="flex justify-between">
-                <span><%= rule.name %></span>
-                <% if (rule.description) { %>
-                  <span title="<%= rule.description %>">?</span>
-                <% } %>
-              </div>
-            </th>
-            <% for (const config of configs) { %>
-              <td><%= config.config.rules[rule.name] %></td>
-            <% } %>
+            <td class="category" colspan="<%= configs.length + 3 %>"><%= category.name %></td>
           </tr>
+          <% for (const rule of category.rules) { %>
+            <tr>
+              <th>
+                <div class="flex justify-between">
+                  <a href="<%= rule.url %>" target="_blank"><%= rule.name %></a>
+                  <% if (rule.description) { %>
+                    <span title="<%= rule.description %>">?</span>
+                  <% } %>
+                </div>
+              </th>
+              <td>
+                <% if (rule.recommended) { %>⭐️<% } %>
+              </td>
+              <td>
+                <!-- <%= rule.fixable %> -->
+                <% if (rule.fixable) { %>🔧<% } %>
+              </td>
+              <% for (const config of configs) { %>
+                <% if (config.config.rules[rule.name] && config.config.rules[rule.name][0] === 'off') { %>
+                  <td class="off">Off</td>
+                <% } else if (config.config.rules[rule.name]) { %>
+                  <td class="error">Error <% if (config.config.rules[rule.name][1]) { %><span title="<%= JSON.stringify(config.config.rules[rule.name][1]) %>">?</span><% } %></td>
+                <% } else { %>
+                  <td class="null"></td>
+                <% } %>
+              <% } %>
+            </tr>
+          <% } %>
         <% } %>
       </tbody>
     </table>

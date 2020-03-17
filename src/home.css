@@ -3,6 +3,58 @@
 @tailwind components;
 @tailwind utilities;
 
-table {
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap');
 
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  @apply text-blue-600 underline;
+}
+
+.table-reponsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 1px 3px;
+  font-size: .875rem;
+}
+
+tr {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+th, td {
+  padding: .125rem .375rem;
+}
+
+th {
+  font-weight: 400;
+  text-align: left;
+}
+
+td {
+  font-weight: 300;
+}
+
+td.category {
+  font-weight: 400;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+}
+
+td.off {
+  @apply bg-blue-300;
+}
+
+td.error {
+  @apply bg-red-500 text-white;
 }
