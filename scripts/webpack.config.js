@@ -1,5 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MinifyPlugin = require('babel-minify-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   devtool: '#cheap-module-eval-source-map',
@@ -21,7 +24,11 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
+        use: [
+          process.env.NODE_ENV === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+          'postcss-loader',
+        ]
       },
       {
         test: /\.js$/,
@@ -31,7 +38,7 @@ module.exports = {
     ]
   },
   plugins: [
-    // new MiniCssExtractPlugin({ filename: 'styles.css' }),
+    new MiniCssExtractPlugin({ filename: 'styles.css' }),
     new webpack.NoEmitOnErrorsPlugin(),
   ],
 }
@@ -42,19 +49,18 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Production
-// if (process.env.NODE_ENV === 'production') {
-//   module.exports.devtool = ''
-//   module.exports.plugins.push(
-//     new MinifyPlugin(),
-//     new CopyWebpackPlugin([
-//       {
-//         from: path.resolve(__dirname, '../static'),
-//         to: path.resolve(__dirname, '../dist/electron/static'),
-//         ignore: ['.*']
-//       }
-//     ]),
-//     new webpack.LoaderOptionsPlugin({
-//       minimize: true
-//     }),
-//   )
-// }
+if (process.env.NODE_ENV === 'production') {
+  module.exports.devtool = ''
+  module.exports.plugins.push(
+    new MinifyPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: path.resolve(__dirname, '../dist'),
+      }
+    ]),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    }),
+  )
+}
