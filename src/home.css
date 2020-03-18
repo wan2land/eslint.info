@@ -3,14 +3,64 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:300,400&display=swap');
 
 body {
   font-family: 'Roboto', sans-serif;
 }
 
+pre {
+  font-family: 'Roboto Mono', monospace;
+}
+
 a {
   @apply text-blue-600 underline;
+}
+
+.header {
+  @apply bg-black px-2 py-1;
+}
+
+.header .thumb {
+  @apply flex items-center text-white text-lg;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+.header .thumb img {
+  display: block;
+  height: 36px;
+}
+.header .thumb span {
+  @apply ml-2;
+  display: block;
+}
+
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+.tooltip::after {
+  content: attr(title);
+  visibility: hidden;
+  position: absolute;
+	top: 50%;
+	left: calc(100% + .25rem);
+  transform: translateX(-5px) translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+	color: #FFFFFF;
+	font-size: .75rem;
+  padding: .25rem .375rem;
+	z-index: 9999;
+  border-radius: 3px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.tooltip:hover::after {
+  visibility: visible;
+  transform: translateX(0) translateY(-50%);
+  opacity: 1;
 }
 
 .table-reponsive {
@@ -45,10 +95,16 @@ td {
 }
 
 td.category {
+  @apply border-gray-600 border-b;
   font-weight: 400;
   position: sticky;
   top: 0;
   background: #ffffff;
+}
+
+td.info,
+td.null {
+  @apply bg-gray-100;
 }
 
 td.off {
@@ -57,4 +113,11 @@ td.off {
 
 td.error {
   @apply bg-red-500 text-white;
+}
+
+td > pre {
+  font-size: .75rem;
+  width: calc(200px - .75rem);
+  overflow: hidden;
+  overflow-x: scroll;
 }

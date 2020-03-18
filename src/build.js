@@ -1,7 +1,47 @@
 const path = require('path')
 
 const { CLIEngine } = require('eslint')
-const rules = require('eslint/lib/rules')
+const eslintRules = [...require('eslint/lib/rules').entries()].map(([name, { meta }]) => ({
+  pkg: 'eslint',
+  name,
+  meta,
+}))
+
+const pluginImportRules = Object.entries(require('eslint-plugin-import').rules).map(([name, { meta }]) => ({
+  pkg: 'eslint-plugin-import',
+  name: `import/${name}`,
+  meta,
+}))
+
+const pluginJsxA11yRules = Object.entries(require('eslint-plugin-jsx-a11y').rules).map(([name, { meta }]) => ({
+  pkg: 'eslint-plugin-jsx-a11y',
+  name: `jsx-a11y/${name}`,
+  meta,
+}))
+
+const pluginReactRules = Object.entries(require('eslint-plugin-react').rules).map(([name, { meta }]) => ({
+  pkg: 'eslint-plugin-react',
+  name: `react/${name}`,
+  meta,
+}))
+
+const pluginNodeRules = Object.entries(require('eslint-plugin-node').rules).map(([name, { meta }]) => ({
+  pkg: 'eslint-plugin-node',
+  name: `node/${name}`,
+  meta,
+}))
+
+const pluginPromiseRules = Object.entries(require('eslint-plugin-promise').rules).map(([name, { meta }]) => ({
+  pkg: 'eslint-plugin-promise',
+  name: `promise/${name}`,
+  meta,
+}))
+
+const pluginStandardRules = Object.entries(require('eslint-plugin-standard').rules).map(([name, { meta }]) => ({
+  pkg: 'eslint-plugin-standard',
+  name: `standard/${name}`,
+  meta,
+}))
 
 const configs = [
   { name: 'eslint:recommended', slug: 'eslint__recommended' },
@@ -12,6 +52,16 @@ const configs = [
   { name: 'XO', slug: 'xo' },
 ]
 
+const rules = [
+  ...eslintRules,
+  ...pluginImportRules,
+  ...pluginJsxA11yRules,
+  ...pluginReactRules,
+  ...pluginNodeRules,
+  ...pluginPromiseRules,
+  ...pluginStandardRules,
+]
+
 module.exports = {
   build() {
     return {
@@ -19,23 +69,15 @@ module.exports = {
         name,
         config: new CLIEngine().getConfigForFile(path.resolve(__dirname, `../eslint-configs/${slug}/.eslintrc.js`)),
       })),
-      categories: [...[...rules.entries()]
-        .map(([name, { meta }]) => ({
-          name,
-          description: meta.docs.description,
-          url: meta.docs.url,
-          category: meta.docs.category,
-          recommended: meta.docs.recommended,
-          fixable: meta.fixable,
-        }))
-        .reduce((carry, rule) => {
-          carry.has(rule.category) || carry.set(rule.category, [])
-          carry.get(rule.category).push(rule)
+      categories: Object.entries(rules.reduce((carry, rule) => {
+          const groupKey = `${rule.pkg}__${rule.category || ''}`
+          carry[groupKey] = carry[groupKey] || { pkg: rule.pkg, category: rule.category, rules: [] }
+          carry[groupKey].rules.push(rule)
           return carry
-        }, new Map())
-        .entries()]
-        .map(([name, rules]) => ({
-          name,
+        }, {}))
+        .map(([_, { pkg, category, rules }]) => ({
+          pkg,
+          category,
           rules: rules.sort((a, b) => a.name > b.name ? 1 : -1),
         }))
     }

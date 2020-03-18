@@ -2,51 +2,99 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>ESLint info</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="keywords" content="ESLint, Linter, Linting, JavaScript" />
+    <meta name="description" content="Provides ESLint config comparison." />
+    <meta name="theme-color" content="#463fd4" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="ESLint Information" />
+    <meta property="og:description" content="Provides ESLint config comparison." />
+    <meta property="og:url" content="https://eslint.info" />
+    <meta property="og:image" content="/favicon.512x512.png" />
+    <meta name="twitter:title" content="ESLint Information" />
+    <meta name="twitter:description" content="Provides ESLint config comparison." />
+    <meta name="twitter:url" content="https://eslint.info" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:image" content="/favicon.512x512.png" />
+    <title>ESLint Information - Config Comparison</title>
+    <link rel="icon" href="/favicon.512x512.png" />
+    <% if (process.env.NODE_ENV === 'production') { %>
+      <link rel="stylesheet" href="/styles.css" />
+    <% } %>
   </head>
   <body>
+    <header class="header">
+      <a class="thumb" href="/">
+        <img src="/favicon.512x512.png" alt="ESLint" />
+        <span>ESLint Information</span>
+      </a>
+    </header>
     <table>
       <colgroup>
         <col width="300px" />
-        <col width="50px" />
-        <col width="50px" />
+        <col width="30px" />
+        <col width="30px" />
+        <col width="30px" />
         <% for (const config of configs) { %>
-          <col width="100px" />
+          <col width="200px" />
         <% } %>
       </colgroup>
       <thead>
-        <th colspan="3"></th>
+        <th></th>
+        <th>
+          <span class="tooltip" title="Description">❓</span>
+        </th>
+        <th>
+          <span class="tooltip" title="Recommended">⭐️</span>
+        </th>
+        <th>
+          <span class="tooltip" title="Fixable">🔧</span>
+        </th>
         <% for (const config of configs) { %>
           <th><%= config.name %></th>
         <% } %>
       </thead>
       <tbody>
+        <tr>
+          <th colspan="4">Plugins</th>
+          <% for (const config of configs) { %>
+            <td class="info">
+              <% for (const plugin of config.config.plugins) { %>
+                <div><a href="https://www.npmjs.com/package/eslint-plugin-<%= plugin %>" target="_blank"><%= plugin %></a></div>
+              <% } %>
+            </td>
+          <% } %>
+        </tr>
         <% for (const category of categories) { %>
           <tr>
-            <td class="category" colspan="<%= configs.length + 3 %>"><%= category.name %></td>
+            <td class="category" colspan="<%= configs.length + 4 %>"><%= category.pkg %><% if (category.category) { %> - <%= category.category %><% } %></td>
           </tr>
           <% for (const rule of category.rules) { %>
             <tr>
               <th>
-                <div class="flex justify-between">
-                  <a href="<%= rule.url %>" target="_blank"><%= rule.name %></a>
-                  <% if (rule.description) { %>
-                    <span title="<%= rule.description %>">?</span>
-                  <% } %>
-                </div>
+                <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
               </th>
               <td>
-                <% if (rule.recommended) { %>⭐️<% } %>
+                <% if (rule.meta.docs.description) { %><span class="tooltip" title="<%= rule.meta.docs.description %>">❓</span><% } %>
               </td>
               <td>
-                <!-- <%= rule.fixable %> -->
-                <% if (rule.fixable) { %>🔧<% } %>
+                <% if (rule.meta.docs.recommended) { %><span class="tooltip" title="Recommended">⭐️</span><% } %>
+              </td>
+              <td>
+                <% if (rule.meta.fixable) { %><span class="tooltip" title="Fixable - <%= rule.meta.fixable %>">🔧</span><% } %>
               </td>
               <% for (const config of configs) { %>
                 <% if (config.config.rules[rule.name] && config.config.rules[rule.name][0] === 'off') { %>
-                  <td class="off">Off</td>
+                  <td class="off"><pre>off</pre></td>
                 <% } else if (config.config.rules[rule.name]) { %>
-                  <td class="error">Error <% if (config.config.rules[rule.name][1]) { %><span title="<%= JSON.stringify(config.config.rules[rule.name][1]) %>">?</span><% } %></td>
+                  <td class="error">
+                    <% if (config.config.rules[rule.name][1]) { %>
+                      <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
+                    <% } else { %>
+                      <pre>(default)</pre>
+                    <% } %>
+                  </td>
                 <% } else { %>
                   <td class="null"></td>
                 <% } %>
