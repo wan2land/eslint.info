@@ -49,6 +49,7 @@ function buildTemplate() {
       fs.writeFileSync(path.resolve(__dirname, '../dist/index.html'), minify(body, {
         html5: true,
         collapseWhitespace: true,
+        minifyJS: true,
         removeComments: true,
         removeStyleLinkTypeAttributes: true,
         removeScriptTypeAttributes: true,
