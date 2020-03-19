@@ -13961,6 +13961,9 @@ a {
 }
 
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #000;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -13985,6 +13988,24 @@ a {
 .header .thumb span {
   margin-left: 0.5rem;
   display: block;
+}
+
+.header .links .link-github {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 0.875rem;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+.header .links .link-github span {
+  display: block;
+}
+
+.header .links .link-github svg {
+  margin-left: 0.5rem;
+  fill: #ffffff;
 }
 
 .tooltip {
