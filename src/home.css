@@ -71,8 +71,9 @@ a {
 }
 
 table {
-  border-collapse: separate;
-  border-spacing: 1px 3px;
+  @apply border-gray-400 border;
+  /* border-collapse: separate; */
+  /* border-spacing: 1px 3px; */
   font-size: .875rem;
 }
 
@@ -82,6 +83,7 @@ tr {
 }
 
 th, td {
+  @apply border-gray-400 border;
   padding: .125rem .375rem;
 }
 
@@ -95,7 +97,6 @@ td {
 }
 
 td.category {
-  @apply border-gray-600 border-b;
   font-weight: 400;
   position: sticky;
   top: 0;
@@ -104,11 +105,11 @@ td.category {
 
 td.info,
 td.null {
-  @apply bg-gray-100;
+  /* @apply bg-gray-100; */
 }
 
 td.off {
-  @apply bg-blue-300;
+  @apply bg-gray-200;
 }
 
 td.error {
