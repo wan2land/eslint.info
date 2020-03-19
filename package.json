@@ -2,8 +2,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node scripts/dev.js",
-    "build": "cross-env NODE_ENV=production node scripts/build.js"
+    "dev": "rimraf dist && cross-env NODE_ENV=development node scripts/dev.js",
+    "build": "rimraf dist && cross-env NODE_ENV=production node scripts/build.js",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {},
   "devDependencies": {
@@ -32,9 +33,11 @@
     "eslint-plugin-react-hooks": "^2.5.0",
     "eslint-plugin-standard": "^4.0.1",
     "express": "^4.17.1",
+    "gh-pages": "^2.2.0",
     "html-minifier": "^4.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "postcss-loader": "^3.0.0",
+    "rimraf": "^3.0.2",
     "style-loader": "^1.1.3",
     "tailwindcss": "^1.2.0",
     "webpack": "^4.42.0",
