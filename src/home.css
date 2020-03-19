@@ -18,7 +18,7 @@ a {
 }
 
 .header {
-  @apply bg-black px-2 py-1;
+  @apply flex justify-between items-center bg-black px-2 py-1;
 }
 
 .header .thumb {
@@ -34,6 +34,21 @@ a {
 .header .thumb span {
   @apply ml-2;
   display: block;
+}
+
+.header .links .link-github {
+  @apply flex items-center text-white text-sm;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+.header .links .link-github span {
+  display: block;
+}
+
+.header .links .link-github svg {
+  @apply ml-2;
+  fill: #ffffff;
 }
 
 .tooltip {
