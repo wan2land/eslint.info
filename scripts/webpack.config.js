@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const MinifyPlugin = require('babel-minify-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
@@ -53,6 +54,7 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = ''
   module.exports.plugins.push(
     new MinifyPlugin(),
+    new OptimizeCssAssetsPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),
