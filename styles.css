@@ -14068,6 +14068,10 @@ th {
   text-align: left;
 }
 
+th.deprecated {
+  background-color: #ecc94b;
+}
+
 td {
   font-weight: 300;
 }
