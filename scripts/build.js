@@ -34,14 +34,24 @@ function buildWebpack(config) {
 }
 
 function buildTemplate() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
 
     log('Template', 'cyan', chalk.cyan('compiling...'))
  
     const build = require('../src/build').build
 
     ejs.renderFile(path.resolve(__dirname, '../templates/index.ejs'), {
-      ...build(),
+      ...await build(),
+      pluginPackage(name) {
+        if (name[0] === '@') {
+          const [ns, pkg] = name.split('/')
+          return `${ns}/eslint-plugin${pkg ? `-${pkg}` : ''}`
+        }
+        return `eslint-plugin-${name}`
+      },
+      anchor(name) {
+        return name.replace(/\s+/, '-').toLowerCase()
+      },
     }, (err, body) => {
       if (err) {
         return reject(err)
