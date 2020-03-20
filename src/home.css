@@ -51,6 +51,10 @@ a {
   fill: #ffffff;
 }
 
+.main {
+  position: relative;
+}
+
 .tooltip {
   position: relative;
   cursor: pointer;
@@ -86,10 +90,17 @@ a {
 }
 
 table {
-  @apply border-gray-400 border;
-  /* border-collapse: separate; */
-  /* border-spacing: 1px 3px; */
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: .875rem;
+}
+
+table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #ffffff;
+  height: 32px;
 }
 
 tr {
@@ -98,8 +109,13 @@ tr {
 }
 
 th, td {
-  @apply border-gray-400 border;
+  @apply border-gray-400 border-b border-l;
   padding: .125rem .375rem;
+}
+
+th:first-child,
+td:first-child {
+  border-left: 0;
 }
 
 th {
@@ -118,8 +134,9 @@ td {
 td.category {
   font-weight: 400;
   position: sticky;
-  top: 0;
+  top: 32px;
   background: #ffffff;
+  z-index: 1;
 }
 
 td.info,

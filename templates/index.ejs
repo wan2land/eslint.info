@@ -43,108 +43,124 @@
         </a>
       </div>
     </header>
-    <table>
-      <colgroup>
-        <col width="300px" />
-        <col width="50px" />
-        <col width="30px" />
-        <col width="30px" />
-        <col width="30px" />
-        <% for (const config of configs) { %>
-          <col width="200px" />
-        <% } %>
-      </colgroup>
-      <thead>
-        <th></th>
-        <th>Type</th>
-        <th>
-          <span class="tooltip" title="Description">📋</span>
-        </th>
-        <th>
-          <span class="tooltip" title="Recommended">⭐️</span>
-        </th>
-        <th>
-          <span class="tooltip" title="Fixable">🔧</span>
-        </th>
-        <% for (const config of configs) { %>
-          <th><%= config.name %></th>
-        <% } %>
-      </thead>
-      <tbody>
-        <tr>
-          <th colspan="5">Env</th>
+    <main class="main">
+      <table>
+        <colgroup>
+          <col width="300px" />
+          <col width="100px" />
+          <col width="30px" />
+          <col width="30px" />
+          <col width="30px" />
           <% for (const config of configs) { %>
-            <td class="info">
-              <% for (const [env, envEnabled] of Object.entries(config.config.env)) { %>
-                <% if (envEnabled) { %>
-                  <div><%= env %></div>
-                <% } %>
-              <% } %>
-            </td>
+            <col width="200px" />
           <% } %>
-        </tr>
-        <tr>
-          <th colspan="5">Plugins</th>
-          <% for (const config of configs) { %>
-            <td class="info">
-              <% for (const plugin of config.config.plugins) { %>
-                <div><a href="https://www.npmjs.com/package/eslint-plugin-<%= plugin %>" target="_blank"><%= plugin %></a></div>
-              <% } %>
-            </td>
-          <% } %>
-        </tr>
-        <% for (const category of categories) { %>
+        </colgroup>
+        <thead>
           <tr>
-            <td class="category" colspan="<%= configs.length + 5 %>"><%= category.pkg %><% if (category.category) { %> - <%= category.category %><% } %></td>
+            <th></th>
+            <th>Type</th>
+            <th>
+              <span class="tooltip" title="Description">📋</span>
+            </th>
+            <th>
+              <span class="tooltip" title="Recommended">⭐️</span>
+            </th>
+            <th>
+              <span class="tooltip" title="Fixable">🔧</span>
+            </th>
+            <% for (const config of configs) { %>
+              <th><%= config.name %></th>
+            <% } %>
           </tr>
-          <% for (const rule of category.rules) { %>
-            <tr>
-              <% if (rule.meta.deprecated)  { %>
-                <th class="deprecated">
-                  <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
-                  <% if ((rule.meta.docs.replacedBy || rule.meta.replacedBy || []).length) { %>
-                    <span class="tooltip" title="Deprecated, replaced by <%= (rule.meta.docs.replacedBy || rule.meta.replacedBy || []).join(', ') %>">❗️</span>
-                  <% } else { %>
-                    <span class="tooltip" title="Deprecated">❗️</span>
-                  <% } %>
-                </th>
-              <% } else { %>
-                <th>
-                  <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
-                </th>
-              <% } %>
-              <th>
-                <%= rule.meta.type %>
-              </th>
-              <td>
-                <% if (rule.meta.docs.description) { %><span class="tooltip" title="<%= rule.meta.docs.description %>">📋</span><% } %>
-              </td>
-              <td>
-                <% if (rule.meta.docs.recommended) { %><span class="tooltip" title="Recommended">⭐️</span><% } %>
-              </td>
-              <td>
-                <% if (rule.meta.fixable) { %><span class="tooltip" title="Fixable - <%= rule.meta.fixable %>">🔧</span><% } %>
-              </td>
-              <% for (const config of configs) { %>
-                <% if (config.config.rules[rule.name] && config.config.rules[rule.name][0] === 'off') { %>
-                  <td class="off"><pre>off</pre></td>
-                <% } else if (config.config.rules[rule.name]) { %>
-                  <td class="error">
-                    <% if (config.config.rules[rule.name][1]) { %>
-                      <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
-                    <% } else { %>
-                      <pre>(default)</pre>
-                    <% } %>
-                  </td>
-                <% } else { %>
-                  <td class="null"></td>
+        </thead>
+        <tbody>
+          <tr>
+            <th colspan="5">NPM Total Download</th>
+            <% for (const config of configs) { %>
+              <td class="info">
+                <% if (config.pkg) { %>
+                  <a href="https://npmcharts.com/compare/<%= config.pkg %>?minimal=true">
+                    <img alt="Downloads" src="https://img.shields.io/npm/dt/<%= config.pkg %>.svg?style=flat-square" />
+                  </a>
                 <% } %>
-              <% } %>
+              </td>
+            <% } %>
+          </tr>
+          <tr>
+            <th colspan="5">Env</th>
+            <% for (const config of configs) { %>
+              <td class="info">
+                <% for (const [env, envEnabled] of Object.entries(config.config.env)) { %>
+                  <% if (envEnabled) { %>
+                    <div><%= env %></div>
+                  <% } %>
+                <% } %>
+              </td>
+            <% } %>
+          </tr>
+          <tr>
+            <th colspan="5">Plugins</th>
+            <% for (const config of configs) { %>
+              <td class="info">
+                <% for (const plugin of config.config.plugins) { %>
+                  <div><a href="https://www.npmjs.com/package/<%= pluginPkg(plugin) %>" target="_blank"><%= plugin %></a></div>
+                <% } %>
+              </td>
+            <% } %>
+          </tr>
+          <% for (const category of categories) { %>
+            <tr>
+              <td class="category" colspan="<%= configs.length + 5 %>"><%= category.pkg %><% if (category.category) { %> - <%= category.category %><% } %></td>
             </tr>
+            <% for (const rule of category.rules) { %>
+              <tr>
+                <% if (rule.meta.deprecated)  { %>
+                  <th class="deprecated">
+                    <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
+                    <% if ((rule.meta.docs.replacedBy || rule.meta.replacedBy || []).length) { %>
+                      <span class="tooltip" title="Deprecated, replaced by <%= (rule.meta.docs.replacedBy || rule.meta.replacedBy || []).join(', ') %>">❗️</span>
+                    <% } else { %>
+                      <span class="tooltip" title="Deprecated">❗️</span>
+                    <% } %>
+                  </th>
+                <% } else { %>
+                  <th>
+                    <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
+                  </th>
+                <% } %>
+                <th>
+                  <%= rule.meta.type %>
+                </th>
+                <td>
+                  <% if (rule.meta.docs.description) { %><span class="tooltip" title="<%= rule.meta.docs.description %>">📋</span><% } %>
+                </td>
+                <td>
+                  <% if (rule.meta.docs.recommended) { %><span class="tooltip" title="Recommended">⭐️</span><% } %>
+                </td>
+                <td>
+                  <% if (rule.meta.fixable) { %><span class="tooltip" title="Fixable - <%= rule.meta.fixable %>">🔧</span><% } %>
+                </td>
+                <% for (const config of configs) { %>
+                  <% if (config.config.rules[rule.name] && config.config.rules[rule.name][0] === 'off') { %>
+                    <td class="off"><pre>off</pre></td>
+                  <% } else if (config.config.rules[rule.name]) { %>
+                    <td class="error">
+                      <% if (config.config.rules[rule.name][1]) { %>
+                        <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
+                      <% } else { %>
+                        <pre>(default)</pre>
+                      <% } %>
+                    </td>
+                  <% } else { %>
+                    <td class="null"></td>
+                  <% } %>
+                <% } %>
+              </tr>
+            <% } %>
           <% } %>
-        <% } %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </main>
 
     <script src="entry.js"></script>
   </body>
