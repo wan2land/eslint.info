@@ -70,6 +70,18 @@
       </thead>
       <tbody>
         <tr>
+          <th colspan="4">Env</th>
+          <% for (const config of configs) { %>
+            <td class="info">
+              <% for (const [env, envEnabled] of Object.entries(config.config.env)) { %>
+                <% if (envEnabled) { %>
+                  <div><%= env %></div>
+                <% } %>
+              <% } %>
+            </td>
+          <% } %>
+        </tr>
+        <tr>
           <th colspan="4">Plugins</th>
           <% for (const config of configs) { %>
             <td class="info">
