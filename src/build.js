@@ -1,3 +1,6 @@
+
+// ref. https://eslint.org/docs/developer-guide/working-with-rules
+
 const path = require('path')
 
 const { CLIEngine } = require('eslint')
@@ -70,8 +73,8 @@ module.exports = {
         config: new CLIEngine().getConfigForFile(path.resolve(__dirname, `../eslint-configs/${slug}/.eslintrc.js`)),
       })),
       categories: Object.entries(rules.reduce((carry, rule) => {
-          const groupKey = `${rule.pkg}__${rule.category || ''}`
-          carry[groupKey] = carry[groupKey] || { pkg: rule.pkg, category: rule.category, rules: [] }
+          const groupKey = `${rule.pkg}__${rule.meta.docs.category || ''}`
+          carry[groupKey] = carry[groupKey] || { pkg: rule.pkg, category: rule.meta.docs.category, rules: [] }
           carry[groupKey].rules.push(rule)
           return carry
         }, {}))

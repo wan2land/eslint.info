@@ -107,6 +107,10 @@ th {
   text-align: left;
 }
 
+th.deprecated {
+  @apply bg-yellow-500;
+}
+
 td {
   font-weight: 300;
 }
