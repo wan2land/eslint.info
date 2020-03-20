@@ -103,19 +103,19 @@
             <% for (const config of configs) { %>
               <td class="info">
                 <% for (const plugin of config.config.plugins) { %>
-                  <div><a href="https://www.npmjs.com/package/<%= pluginPkg(plugin) %>" target="_blank"><%= plugin %></a></div>
+                  <div><a href="https://www.npmjs.com/package/<%= pluginPackage(plugin) %>" target="_blank"><%= plugin %></a></div>
                 <% } %>
               </td>
             <% } %>
           </tr>
           <% for (const package of packages) { %>
             <tr>
-              <th class="package" colspan="<%= configs.length + 5 %>"><%= package.name %></th>
+              <th class="package" colspan="<%= configs.length + 5 %>"><%= package.name %> <a class="anchor" name="<%= anchor(package.name) %>" href="#<%= anchor(package.name) %>">#</a></th>
             </tr>
             <% for (const category of package.categories) { %>
               <% if (category.name) { %>
                 <tr>
-                  <th class="category" colspan="<%= configs.length + 5 %>"><%= category.name %></th>
+                  <th class="category" colspan="<%= configs.length + 5 %>"><%= category.name %> <a class="anchor" name="<%= anchor(package.name + '/' + category.name) %>" href="#<%= anchor(package.name + '/' + category.name) %>">#</a></th>
                 </tr>
               <% } %>
               <% for (const rule of category.rules) { %>

@@ -48,12 +48,15 @@ function startExpress() {
       const build = require('../src/build').build
       res.render('index.ejs', {
         ...await build(),
-        pluginPkg(name) {
+        pluginPackage(name) {
           if (name[0] === '@') {
             const [ns, pkg] = name.split('/')
             return `${ns}/eslint-plugin${pkg ? `-${pkg}` : ''}`
           }
           return `eslint-plugin-${name}`
+        },
+        anchor(name) {
+          return name.replace(/\s+/, '-').toLowerCase()
         },
       })
     })

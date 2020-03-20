@@ -142,6 +142,11 @@ td.package {
   z-index: 2;
 }
 
+th.package a.anchor,
+td.package a.anchor {
+  @apply no-underline text-blue-200 font-bold;
+}
+
 th.category,
 td.category {
   @apply text-gray-800;
@@ -151,6 +156,12 @@ td.category {
   background: #ffffff;
   z-index: 1;
 }
+
+th.category a.anchor,
+td.category a.anchor {
+  @apply no-underline text-blue-600 font-bold;
+}
+
 
 td.info,
 td.null {
