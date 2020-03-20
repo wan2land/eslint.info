@@ -43,11 +43,18 @@ function startExpress() {
     app.set('view engine', 'ejs')
     app.engine('html', require('ejs').renderFile)
 
-    app.get('/', (_, res) => {
+    app.get('/', async (_, res) => {
       delete require.cache[require.resolve('../src/build')]
       const build = require('../src/build').build
       res.render('index.ejs', {
-        ...build(),
+        ...await build(),
+        pluginPkg(name) {
+          if (name[0] === '@') {
+            const [ns, pkg] = name.split('/')
+            return `${ns}/eslint-plugin${pkg ? `-${pkg}` : ''}`
+          }
+          return `eslint-plugin-${name}`
+        },
       })
     })
 

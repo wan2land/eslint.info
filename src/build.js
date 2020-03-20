@@ -5,54 +5,55 @@ const path = require('path')
 
 const { CLIEngine } = require('eslint')
 const eslintRules = [...require('eslint/lib/rules').entries()].map(([name, { meta }]) => ({
-  pkg: 'eslint',
+  package: 'eslint',
   name,
   meta,
 }))
 
 const pluginImportRules = Object.entries(require('eslint-plugin-import').rules).map(([name, { meta }]) => ({
-  pkg: 'eslint-plugin-import',
+  package: 'eslint-plugin-import',
   name: `import/${name}`,
   meta,
 }))
 
 const pluginJsxA11yRules = Object.entries(require('eslint-plugin-jsx-a11y').rules).map(([name, { meta }]) => ({
-  pkg: 'eslint-plugin-jsx-a11y',
+  package: 'eslint-plugin-jsx-a11y',
   name: `jsx-a11y/${name}`,
   meta,
 }))
 
 const pluginReactRules = Object.entries(require('eslint-plugin-react').rules).map(([name, { meta }]) => ({
-  pkg: 'eslint-plugin-react',
+  package: 'eslint-plugin-react',
   name: `react/${name}`,
   meta,
 }))
 
 const pluginNodeRules = Object.entries(require('eslint-plugin-node').rules).map(([name, { meta }]) => ({
-  pkg: 'eslint-plugin-node',
+  package: 'eslint-plugin-node',
   name: `node/${name}`,
   meta,
 }))
 
 const pluginPromiseRules = Object.entries(require('eslint-plugin-promise').rules).map(([name, { meta }]) => ({
-  pkg: 'eslint-plugin-promise',
+  package: 'eslint-plugin-promise',
   name: `promise/${name}`,
   meta,
 }))
 
 const pluginStandardRules = Object.entries(require('eslint-plugin-standard').rules).map(([name, { meta }]) => ({
-  pkg: 'eslint-plugin-standard',
+  package: 'eslint-plugin-standard',
   name: `standard/${name}`,
   meta,
 }))
 
 const configs = [
   { name: 'eslint:recommended', slug: 'eslint__recommended' },
-  { name: 'Airbnb', slug: 'airbnb' },
-  { name: 'Google', slug: 'google' },
-  { name: 'Standard', slug: 'standard' },
-  { name: 'Semistandard', slug: 'semistandard' },
-  { name: 'XO', slug: 'xo' },
+  { name: 'Prettier', slug: 'prettier', package: 'eslint-config-prettier' },
+  { name: 'Airbnb', slug: 'airbnb', package: 'eslint-config-airbnb' },
+  { name: 'Google', slug: 'google', package: 'eslint-config-google' },
+  { name: 'Standard', slug: 'standard', package: 'eslint-config-standard' },
+  { name: 'Semistandard', slug: 'semistandard', package: 'eslint-config-semistandard' },
+  { name: 'XO', slug: 'xo', package: 'eslint-config-xo' },
 ]
 
 const rules = [
@@ -65,24 +66,25 @@ const rules = [
   ...pluginStandardRules,
 ]
 
+function groupBy(nodes, keyBy) {
+  return Object.entries(nodes.reduce((carry, node) => ((carry[keyBy(node) || ''] || (carry[keyBy(node) || ''] = [])).push(node), carry), {}))
+}
+
 module.exports = {
-  build() {
+  async build() {
     return {
-      configs: configs.map(({ name, slug }) => ({
+      configs: await Promise.all(configs.map(async ({ name, slug, package }) => ({
         name,
         config: new CLIEngine().getConfigForFile(path.resolve(__dirname, `../eslint-configs/${slug}/.eslintrc.js`)),
-      })),
-      categories: Object.entries(rules.reduce((carry, rule) => {
-          const groupKey = `${rule.pkg}__${rule.meta.docs.category || ''}`
-          carry[groupKey] = carry[groupKey] || { pkg: rule.pkg, category: rule.meta.docs.category, rules: [] }
-          carry[groupKey].rules.push(rule)
-          return carry
-        }, {}))
-        .map(([_, { pkg, category, rules }]) => ({
-          pkg,
-          category,
+        package: package,
+      }))),
+      packages: groupBy(rules, rule => rule.package).map(([name, rules]) => ({
+        name,
+        categories: groupBy(rules, rule => rule.meta.docs.category).map(([name, rules]) => ({
+          name,
           rules: rules.sort((a, b) => a.name > b.name ? 1 : -1),
-        }))
+        })).sort((a, b) => a.category > b.category ? 1 : -1),
+      })),
     }
   },
 }

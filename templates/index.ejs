@@ -78,9 +78,9 @@
             <th colspan="5">NPM Total Download</th>
             <% for (const config of configs) { %>
               <td class="info">
-                <% if (config.pkg) { %>
-                  <a href="https://npmcharts.com/compare/<%= config.pkg %>?minimal=true">
-                    <img alt="Downloads" src="https://img.shields.io/npm/dt/<%= config.pkg %>.svg?style=flat-square" />
+                <% if (config.package) { %>
+                  <a href="https://npmcharts.com/compare/<%= config.package %>?minimal=true">
+                    <img alt="Downloads" src="https://img.shields.io/npm/dt/<%= config.package %>.svg?style=flat-square" />
                   </a>
                 <% } %>
               </td>
@@ -108,54 +108,61 @@
               </td>
             <% } %>
           </tr>
-          <% for (const category of categories) { %>
+          <% for (const package of packages) { %>
             <tr>
-              <td class="category" colspan="<%= configs.length + 5 %>"><%= category.pkg %><% if (category.category) { %> - <%= category.category %><% } %></td>
+              <th class="package" colspan="<%= configs.length + 5 %>"><%= package.name %></th>
             </tr>
-            <% for (const rule of category.rules) { %>
-              <tr>
-                <% if (rule.meta.deprecated)  { %>
-                  <th class="deprecated">
-                    <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
-                    <% if ((rule.meta.docs.replacedBy || rule.meta.replacedBy || []).length) { %>
-                      <span class="tooltip" title="Deprecated, replaced by <%= (rule.meta.docs.replacedBy || rule.meta.replacedBy || []).join(', ') %>">❗️</span>
-                    <% } else { %>
-                      <span class="tooltip" title="Deprecated">❗️</span>
-                    <% } %>
-                  </th>
-                <% } else { %>
-                  <th>
-                    <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
-                  </th>
-                <% } %>
-                <th>
-                  <%= rule.meta.type %>
-                </th>
-                <td>
-                  <% if (rule.meta.docs.description) { %><span class="tooltip" title="<%= rule.meta.docs.description %>">📋</span><% } %>
-                </td>
-                <td>
-                  <% if (rule.meta.docs.recommended) { %><span class="tooltip" title="Recommended">⭐️</span><% } %>
-                </td>
-                <td>
-                  <% if (rule.meta.fixable) { %><span class="tooltip" title="Fixable - <%= rule.meta.fixable %>">🔧</span><% } %>
-                </td>
-                <% for (const config of configs) { %>
-                  <% if (config.config.rules[rule.name] && config.config.rules[rule.name][0] === 'off') { %>
-                    <td class="off"><pre>off</pre></td>
-                  <% } else if (config.config.rules[rule.name]) { %>
-                    <td class="error">
-                      <% if (config.config.rules[rule.name][1]) { %>
-                        <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
+            <% for (const category of package.categories) { %>
+              <% if (category.name) { %>
+                <tr>
+                  <th class="category" colspan="<%= configs.length + 5 %>"><%= category.name %></th>
+                </tr>
+              <% } %>
+              <% for (const rule of category.rules) { %>
+                <tr>
+                  <% if (rule.meta.deprecated)  { %>
+                    <th class="deprecated">
+                      <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
+                      <% if ((rule.meta.docs.replacedBy || rule.meta.replacedBy || []).length) { %>
+                        <span class="tooltip" title="Deprecated, replaced by <%= (rule.meta.docs.replacedBy || rule.meta.replacedBy || []).join(', ') %>">❗️</span>
                       <% } else { %>
-                        <pre>(default)</pre>
+                        <span class="tooltip" title="Deprecated">❗️</span>
                       <% } %>
-                    </td>
+                    </th>
                   <% } else { %>
-                    <td class="null"></td>
+                    <th>
+                      <a href="<%= rule.meta.docs.url %>" target="_blank"><%= rule.name %></a>
+                    </th>
                   <% } %>
-                <% } %>
-              </tr>
+                  <th>
+                    <%= rule.meta.type %>
+                  </th>
+                  <td>
+                    <% if (rule.meta.docs.description) { %><span class="tooltip" title="<%= rule.meta.docs.description %>">📋</span><% } %>
+                  </td>
+                  <td>
+                    <% if (rule.meta.docs.recommended) { %><span class="tooltip" title="Recommended">⭐️</span><% } %>
+                  </td>
+                  <td>
+                    <% if (rule.meta.fixable) { %><span class="tooltip" title="Fixable - <%= rule.meta.fixable %>">🔧</span><% } %>
+                  </td>
+                  <% for (const config of configs) { %>
+                    <% if (config.config.rules[rule.name] && config.config.rules[rule.name][0] === 'off') { %>
+                      <td class="off"><pre>off</pre></td>
+                    <% } else if (config.config.rules[rule.name]) { %>
+                      <td class="error">
+                        <% if (config.config.rules[rule.name][1]) { %>
+                          <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
+                        <% } else { %>
+                          <pre>(default)</pre>
+                        <% } %>
+                      </td>
+                    <% } else { %>
+                      <td class="null"></td>
+                    <% } %>
+                  <% } %>
+                </tr>
+              <% } %>
             <% } %>
           <% } %>
         </tbody>
