@@ -54,6 +54,7 @@ const configs = [
   { name: 'Standard', slug: 'standard', package: 'eslint-config-standard' },
   { name: 'Semistandard', slug: 'semistandard', package: 'eslint-config-semistandard' },
   { name: 'XO', slug: 'xo', package: 'eslint-config-xo' },
+  { name: 'XO Space', slug: 'xo-space', package: 'eslint-config-xo-space' },
 ]
 
 const rules = [
