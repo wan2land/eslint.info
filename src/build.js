@@ -46,10 +46,17 @@ const pluginStandardRules = Object.entries(require('eslint-plugin-standard').rul
   meta,
 }))
 
+const pluginTypescriptEslintRules = Object.entries(require('@typescript-eslint/eslint-plugin').rules).map(([name, { meta }]) => ({
+  package: '@typescript-eslint/eslint-plugin',
+  name: `@typescript-eslint/${name}`,
+  meta,
+}))
+
 const configs = [
   { name: 'eslint:recommended', slug: 'eslint__recommended' },
   { name: 'Prettier', slug: 'prettier', package: 'eslint-config-prettier' },
   { name: 'Airbnb', slug: 'airbnb', package: 'eslint-config-airbnb' },
+  { name: 'Airbnb Typescript', slug: 'airbnb-typescript', package: 'eslint-config-airbnb-typescript' },
   { name: 'Google', slug: 'google', package: 'eslint-config-google' },
   { name: 'Standard', slug: 'standard', package: 'eslint-config-standard' },
   { name: 'Semistandard', slug: 'semistandard', package: 'eslint-config-semistandard' },
@@ -65,6 +72,7 @@ const rules = [
   ...pluginNodeRules,
   ...pluginPromiseRules,
   ...pluginStandardRules,
+  ...pluginTypescriptEslintRules,
 ]
 
 function groupBy(nodes, keyBy) {
