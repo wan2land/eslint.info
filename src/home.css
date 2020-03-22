@@ -172,6 +172,10 @@ td.off {
   @apply bg-gray-200;
 }
 
+td.warn {
+  @apply bg-yellow-500;
+}
+
 td.error {
   @apply bg-red-500 text-white;
 }

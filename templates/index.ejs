@@ -150,13 +150,23 @@
                     <% if (config.config.rules[rule.name] && config.config.rules[rule.name][0] === 'off') { %>
                       <td class="off"><pre>off</pre></td>
                     <% } else if (config.config.rules[rule.name]) { %>
-                      <td class="error">
-                        <% if (config.config.rules[rule.name][1]) { %>
-                          <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
-                        <% } else { %>
-                          <pre>(default)</pre>
-                        <% } %>
-                      </td>
+                      <% if (config.config.rules[rule.name] === 'warn' || config.config.rules[rule.name][0] === 'warn') { %>
+                        <td class="warn">
+                          <% if (config.config.rules[rule.name][1]) { %>
+                            <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
+                          <% } else { %>
+                            <pre>(warn)</pre>
+                          <% } %>
+                        </td>
+                      <% } else { %>
+                        <td class="error">
+                          <% if (config.config.rules[rule.name][1]) { %>
+                            <pre><%= JSON.stringify(config.config.rules[rule.name][1], null, 2) %></pre>
+                          <% } else { %>
+                            <pre>(error)</pre>
+                          <% } %>
+                        </td>
+                      <% } %>
                     <% } else { %>
                       <td class="null"></td>
                     <% } %>
